@@ -2,7 +2,7 @@ import "../App.css";
 
 function Home() {
   return (<div className="flex flex-col justify-center align-center text-center">
-    <h1 className="text-5xl font-bold mb-5">CorpAdvisor</h1>
+    <h1 className="text-5xl font-bold mb-5">Corp<span className="text-indigo-700">Advisor</span></h1>
     <div className="intro p-6">
       <h5 className="text-md text-gray-700 leading-relaxed">
         안녕하세요! CorpAdvisor입니다. 👋
