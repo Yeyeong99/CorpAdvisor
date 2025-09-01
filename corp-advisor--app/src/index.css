@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 글로벌 CSS (예: index.css, globals.css) */
+::-webkit-scrollbar {
+  width: 12px; /* 스크롤바 두께 */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 트랙 색상 */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbbaba; /* 스크롤바 색상 */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #949494; /* hover 시 색상 */
+  width: 12px; /* 스크롤바 두께 */
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

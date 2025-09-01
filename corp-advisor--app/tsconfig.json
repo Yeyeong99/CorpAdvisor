@@ -1,7 +1,11 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "composite": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "esnext"]
+    // 필요하다면 아래도 추가
+    // "module": "esnext",
+    // "moduleResolution": "node"
+  },
+  "include": ["src"]
 }
