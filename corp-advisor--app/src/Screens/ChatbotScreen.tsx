@@ -1,125 +1,133 @@
-import { useState } from "react";
-import {useMediaQuery} from "react-responsive";
+import { useState, useEffect, useRef } from "react";
 
-const messages = [
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  {
-    type: "answer",
-    text: "삼성전자 보고서를 생성 중입니다...삼성전자의 경우 2023년도 매출에 비해 2024년도 매출이 크게 올랐습니다. 이는 반도체 사업의 부진을 스마트폰, 가전제품과 같은 영역을 통해 극복한 모습으로 볼 수 있습니다. 다만 어닝 쇼크가 있었던 만큼 투자 심리에 악역향을 끼쳤습니다. 현재는 코스피 지수가 3000대를 돌파한 후 70000원대의 주가를 보이며 앞으로도 상승세를 그릴 것으로 예상됩니다.",
-  },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
-  { type: "question", text: "삼성전자 보고서를 생성해주세요." },
-  { type: "answer", text: "보고서를 생성 중입니다..." },
-];
+// 메시지 타입 정의
+type Message = {
+  type: 'question' | 'answer';
+  text: string;
+};
+
+const initialMessages: Message[] = [];
 
 function Chatbot() {
-  const isMobile = useMediaQuery({
-    maxWidth: 768,
-    ssrMatchMedia: () => ({matches: false})
-  } as any);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  const isTablet = useMediaQuery({
-    minWidth: 769,
-    maxWidth: 1224,
-    ssrMatchMedia: () => ({matches: false})
-  } as any);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  const inputClass = isMobile ? "w-full" : isTablet ? "w-2/3 mx-auto" : "w-1/2 mx-auto"
-  const messageContainer = isMobile ? "w-full mx-auto flex flex-col gap-3 mb-6 p-4 pb-32" : isTablet ? " w-2/3 mx-auto flex flex-col gap-3 mb-6 p-4 pb-32" : " w-1/2 mx-auto flex flex-col gap-3 mb-6 p-4 pb-32"
+  const inputContainerClass = isMobile ? "w-full" : "w-2/3 mx-auto";
+  const messageListClass = isMobile ? "p-4" : "w-1/2 mx-auto p-4";
+
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState("");
+  const chatEndRef = useRef<null | HTMLDivElement>(null);
+  // --- Textarea DOM 요소에 접근하기 위한 ref ---
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // --- 입력값 변경 시 textarea 높이를 자동으로 조절하는 로직 ---
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'; // 높이 초기화
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // 스크롤 높이에 맞춰 재설정
+    }
+  }, [inputValue]);
+
 
   const handleSubmit = () => {
     if (inputValue.trim()) {
-      console.log("생성 요청:", inputValue);
+      const newQuestion: Message = { type: "question", text: inputValue };
+      setMessages(prev => [...prev, newQuestion]);
+      
+      setTimeout(() => {
+        const newAnswer: Message = { type: "answer", text: `'${inputValue}'에 대한 답변입니다.` };
+        setMessages(prev => [...prev, newAnswer]);
+      }, 1000);
+      
       setInputValue("");
+      // 전송 후 textarea 높이도 초기화
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+  // --- Enter는 전송, Shift+Enter는 줄바꿈을 위한 핸들러 ---
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault(); // Enter 키의 기본 동작(줄바꿈) 방지
       handleSubmit();
     }
   };
 
   const hasMessages = messages.length > 0;
 
-  // 입력 창의 내부 컨텐츠를 상수로 분리 (코드 중복 방지)
-  const FormContent = (
-    <>
+  const ChatForm = (
+    <div className={inputContainerClass}>
       <div className="flex gap-2 mb-2">
-        <input
-          type="text"
+        {/* --- input을 textarea로 변경 --- */}
+        <textarea
+          ref={textareaRef}
           value={inputValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setInputValue(e.target.value)
-          }
-          onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
-            handleKeyPress(e)
-          }
-          placeholder= {messages.length > 0 ? "" : "금융과 관련해 궁금하신 점을 질문해주세요."}
-          className= "flex-1 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={hasMessages ? "추가 질문을 입력하세요." : "금융과 관련해 궁금하신 점을 질문해주세요."}
+          className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none overflow-y-hidden"
+          rows={1}
         />
         <button
           type="button"
           onClick={handleSubmit}
-          className="px-6 py-3 bg-indigo-500 text-white rounded hover:bg-indigo-600 transform transition-transform duration-300 hover:scale-105"
+          className="px-5 py-3 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-600 transform transition-transform duration-200 hover:scale-105 active:scale-95 self-end"
         >
           ⬆
         </button>
       </div>
-      <div className="text-center text-sm text-gray-500">
-        CorpAdvisor의 답변에서 실수가 발생할 수 있습니다. 중요한 정보는 한 번 더
-        확인해주세요.
+      <div className="text-center text-xs text-gray-400">
+        CorpAdvisor의 답변은 부정확할 수 있습니다. 중요한 정보는 다시 확인해주세요.
       </div>
-    </>
+    </div>
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="w-full flex flex-col justify-center items-center h-screen bg-white font-sans">
       {hasMessages ? (
-        // --- 메시지가 있을 때 ---
         <>
-          <div className={messageContainer}>
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`p-3 rounded-xl break-words ${
-                  msg.type === "question"
-                    ? "self-end bg-gray-100 text-gray-700 rounded-tr-none"
-                    : "text-gray-700"
-                }`}
-              >
-                {msg.text}
+          <main className="w-full flex-1 overflow-y-auto pb-32">
+            <div className={messageListClass}>
+              <div className="space-y-4">
+                {messages.map((msg, idx) => {
+                  const isQuestion = msg.type === "question";
+                  return (
+                    <div key={idx} className={`flex ${isQuestion ? "justify-end" : "justify-start"}`}>
+                      <div className={`p-4 rounded-2xl break-words max-w-[80%] md:max-w-[70%] ${isQuestion ? "bg-indigo-500 text-white rounded-br-none" : "bg-gray-100 text-gray-800 rounded-bl-none"}`}>
+                        {msg.text}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-
-          {/* 하단 고정 입력창 컨테이너 */}
-          <div className="bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0">
-            <div className={inputClass}>{FormContent}</div>
-          </div>
+              <div ref={chatEndRef} />
+            </div>
+          </main>
+          <footer className="w-full bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0">
+            {ChatForm}
+          </footer>
         </>
       ) : (
-        // --- 메시지가 없을 때 ---
-        <div className="flex flex-col justify-center items-center min-h-screen gap-6">
-          <header className="py-6">
-            <h1 className="text-3xl font-bold text-center">금융 자문 챗봇</h1>
+        <div className="w-2/3 flex flex-col justify-center items-center h-full gap-6 p-4">
+          <header className="text-center">
+            <h1 className="text-4xl font-bold text-gray-800">금융 자문 챗봇</h1>
+            <p className="text-gray-500 mt-2">CorpAdvisor</p>
           </header>
-
-          <div className="bg-white p-4">{FormContent}</div>
+          <div className="w-full">{ChatForm}</div>
         </div>
       )}
     </div>
@@ -127,3 +135,4 @@ function Chatbot() {
 }
 
 export default Chatbot;
+
