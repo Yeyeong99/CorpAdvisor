@@ -106,8 +106,8 @@ function Chatbot() {
                 {messages.map((msg, idx) => {
                   const isQuestion = msg.type === "question";
                   return (
-                    <div key={idx} className={`flex ${isQuestion ? "justify-end" : "justify-start"}`}>
-                      <div className={`p-4 rounded-2xl break-words max-w-[80%] md:max-w-[70%] ${isQuestion ? "bg-indigo-500 text-white rounded-br-none" : "bg-gray-100 text-gray-800 rounded-bl-none"}`}>
+                    <div key={idx} className={`flex ${isQuestion ? "justify-end" : ""}`}>
+                      <div className={`rounded-2xl break-words  ${isQuestion ? "p-4 text-justify max-w-[80%] md:max-w-[70%] bg-indigo-50 shadow-sm text-gray-800 rounded-br-none" : "max-w-[100%] md:max-w-[100%] "}`}>
                         {msg.text}
                       </div>
                     </div>
