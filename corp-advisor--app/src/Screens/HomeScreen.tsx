@@ -4,21 +4,18 @@ import {useMediaQuery} from "react-responsive";
 const isMobile = useMediaQuery({
   maxWidth: 768,
   ssrMatchMedia: () => ({matches: false})
-}
-as any);
+} as any);
 
 const isTablet = useMediaQuery({
   minWidth: 769,
   maxWidth: 1224,
   ssrMatchMedia: () => ({matches: false})
-}
-as any);
+} as any);
 
 const isDesktop = useMediaQuery({
   minWidth: 1225,
   ssrMatchMedia: () => ({matches: false})
-}
-as any);
+} as any);
 
 function Home() {
   const h2Class = isMobile
