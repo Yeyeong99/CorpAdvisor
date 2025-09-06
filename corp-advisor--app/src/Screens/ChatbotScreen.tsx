@@ -122,7 +122,7 @@ function Chatbot() {
           </footer>
         </>
       ) : (
-        <div className="w-2/3 flex flex-col justify-center items-center h-full gap-6 p-4">
+        <div className="w-3/4 flex flex-col justify-center items-center h-full gap-6 p-4">
           <header className="text-center">
             <h1 className="text-4xl font-bold text-gray-800">금융 자문 챗봇</h1>
             <p className="text-gray-500 mt-2">CorpAdvisor</p>
