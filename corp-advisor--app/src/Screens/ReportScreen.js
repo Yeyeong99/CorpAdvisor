@@ -23,7 +23,7 @@ const messages = [
     { type: "question", text: "삼성전자 보고서를 생성해주세요." },
     { type: "answer", text: "삼성전자 보고서를 생성 중입니다..." },
 ];
-function Chatbot() {
+function Report() {
     const [inputValue, setInputValue] = useState("");
     const handleSubmit = () => {
         if (inputValue.trim()) {
@@ -47,4 +47,4 @@ function Chatbot() {
         // --- 메시지가 없을 때 ---
         _jsxs("div", { className: "flex flex-col justify-center items-center min-h-screen gap-6", children: [_jsx("header", { className: "py-6", children: _jsx("h1", { className: "text-3xl font-bold text-center", children: "\uAE30\uC5C5 \uBCF4\uACE0\uC11C \uC0DD\uC131" }) }), _jsx("div", { className: "bg-white p-4", children: FormContent })] })) }));
 }
-export default Chatbot;
+export default Report;

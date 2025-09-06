@@ -1,30 +1,25 @@
 import "../App.css";
 import {useMediaQuery} from "react-responsive";
 
-const isMobile = useMediaQuery({
-  maxWidth: 768,
-  ssrMatchMedia: () => ({matches: false})
-} as any);
-
-const isTablet = useMediaQuery({
-  minWidth: 769,
-  maxWidth: 1224,
-  ssrMatchMedia: () => ({matches: false})
-} as any);
-
-const isDesktop = useMediaQuery({
-  minWidth: 1225,
-  ssrMatchMedia: () => ({matches: false})
-} as any);
-
 function Home() {
+  const isMobile = useMediaQuery({
+    maxWidth: 768,
+    ssrMatchMedia: () => ({matches: false})
+  } as any);
+
+  const isTablet = useMediaQuery({
+    minWidth: 769,
+    maxWidth: 1224,
+    ssrMatchMedia: () => ({matches: false})
+  } as any);
+
   const h2Class = isMobile
     ? "text-base font-semibold mb-2 group-hover:text-gray-100 transition-colors duration-200"
     : isTablet
       ? "text-md font-semibold mb-2 group-hover:text-gray-100 transition-colors duration-200"
       : "text-2xl font-semibold mb-2 group-hover:text-gray-100 transition-colors duration-200";
 
-  return (<div className="flex flex-col justify-center align-center text-center">
+  return (<div className="p-12 flex flex-col justify-center align-center text-center">
     <h1 className="text-5xl font-bold mb-5">
       Corp<span className="text-indigo-700">Advisor</span>
     </h1>

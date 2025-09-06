@@ -6,6 +6,8 @@
     "jsx": "react-jsx", // React 17+ 방식
     "esModuleInterop": true, // default import 허용
     "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true

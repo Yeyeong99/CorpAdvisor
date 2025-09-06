@@ -1,9 +1,9 @@
 import "./App.css";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
-import Home from "./Screens/HomeScreen";
-import Report from "./Screens/ReportScreen";
-import Chatbot from "./Screens/ChatbotScreen";
+import Home from "./Screens/HomeScreen.tsx";
+import Report from "./Screens/ReportScreen.tsx";
+import Chatbot from "./Screens/ChatbotScreen.tsx";
 
 function App() {
   return (<> < Router > <Routes>

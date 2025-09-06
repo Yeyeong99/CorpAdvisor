@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {useMediaQuery} from "react-responsive";
 
 const messages = [
   { type: "question", text: "삼성전자 보고서를 생성해주세요." },
@@ -25,6 +26,19 @@ const messages = [
 ];
 
 function Chatbot() {
+  const isMobile = useMediaQuery({
+    maxWidth: 768,
+    ssrMatchMedia: () => ({matches: false})
+  } as any);
+
+  const isTablet = useMediaQuery({
+    minWidth: 769,
+    maxWidth: 1224,
+    ssrMatchMedia: () => ({matches: false})
+  } as any);
+
+  const inputClass = isMobile ? "w-full" : isTablet ? "w-2/3 mx-auto" : "w-1/2 mx-auto"
+  const messageContainer = isMobile ? "w-full mx-auto flex flex-col gap-3 mb-6 p-4 pb-32" : isTablet ? " w-2/3 mx-auto flex flex-col gap-3 mb-6 p-4 pb-32" : " w-1/2 mx-auto flex flex-col gap-3 mb-6 p-4 pb-32"
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = () => {
@@ -55,8 +69,8 @@ function Chatbot() {
           onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
             handleKeyPress(e)
           }
-          placeholder="금융과 관련해 궁금하신 점을 질문해주세요."
-          className="flex-1 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder= {messages.length > 0 ? "" : "금융과 관련해 궁금하신 점을 질문해주세요."}
+          className= "flex-1 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <button
           type="button"
@@ -78,7 +92,7 @@ function Chatbot() {
       {hasMessages ? (
         // --- 메시지가 있을 때 ---
         <>
-          <div className=" w-1/2 mx-auto flex flex-col gap-3 mb-6 p-4 pb-32">
+          <div className={messageContainer}>
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -95,7 +109,7 @@ function Chatbot() {
 
           {/* 하단 고정 입력창 컨테이너 */}
           <div className="bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0">
-            <div className="w-1/2 mx-auto">{FormContent}</div>
+            <div className={inputClass}>{FormContent}</div>
           </div>
         </>
       ) : (
