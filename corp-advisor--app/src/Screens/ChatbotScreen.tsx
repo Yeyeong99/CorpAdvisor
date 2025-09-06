@@ -9,18 +9,23 @@ type Message = {
 const initialMessages: Message[] = [];
 
 function Chatbot() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const getDeviceType = () => {
+    const width = window.innerWidth;
+    if (width <= 768) return 'mobile';
+    if (width <= 1024) return 'tablet';
+    return 'desktop';
+  };
+
+  const [deviceType, setDeviceType] = useState(getDeviceType());
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const handleResize = () => setDeviceType(getDeviceType());
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const inputContainerClass = isMobile ? "w-full" : "w-2/3 mx-auto";
-  const messageListClass = isMobile ? "p-4" : "w-1/2 mx-auto p-4";
+  const inputContainerClass = deviceType === 'mobile' ? "w-full" : "w-2/3 mx-auto";
+  const messageListClass = deviceType === 'mobile' ? "p-4" : "w-1/2 mx-auto p-4";
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState("");
@@ -78,7 +83,7 @@ function Chatbot() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={hasMessages ? "추가 질문을 입력하세요." : "금융과 관련해 궁금하신 점을 질문해주세요."}
+          placeholder={hasMessages ? "추가 질문을 입력하세요." : "금융과 관련해 질문해주세요."}
           className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none overflow-y-hidden"
           rows={1}
         />
@@ -122,7 +127,7 @@ function Chatbot() {
           </footer>
         </>
       ) : (
-        <div className="w-3/4 flex flex-col justify-center items-center h-full gap-6 p-4">
+        <div className={`${deviceType === 'mobile' ? "w-full" : deviceType === 'tablet' ? "w-3/4": "w-1/2"} flex flex-col justify-center items-center h-full gap-6 p-4`}>
           <header className="text-center">
             <h1 className="text-4xl font-bold text-gray-800">금융 자문 챗봇</h1>
             <p className="text-gray-500 mt-2">CorpAdvisor</p>
